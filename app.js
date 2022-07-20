@@ -1,61 +1,59 @@
+
+let playerScore = 0;
+let computerScore = 0;
+const buttons = document.querySelectorAll('input');
+
 function computerPlay() {
-    const choices = ["Rock", "Paper", "Scissors"];
-    let computerChoice = Math.floor(Math.random() * choices.length);
-    return choices[computerChoice];
+    let choices = ['rock', 'paper', 'scissors']
+    return choices[Math.floor(Math.random() * choices.length)]
 }
 
-game();
+function disableButtons() {
+    buttons.forEach(elem => {
+        elem.disabled = true
+    });
+}
 
+function playRound(playerSelection) {
+    let computerSelection = computerPlay();
+    let result = "";
 
-function playRound(playerSelection, computerSelection) {
+    if ((playerSelection == 'rock' && computerSelection == 'scissors') ||
+        (playerSelection == 'scissors' && computerSelection == 'paper') ||
+        (playerSelection == 'paper' && computerSelection == 'rock')) {
 
-    if (playerSelection == "Rock") {
-        if (computerSelection == "Rock") {
-            console.log("Draw! you are both Rock")
+        playerScore += 1;
+        result = ('You win!' + playerSelection + ' beats ' + computerSelection
+        + "<br><br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+
+        if (playerScore == 5) {
+            result += '<br><br>You won the game! Reload the page to play again'
+            disableButtons()
         }
-        else if (computerSelection == "Paper") {
-            console.log("You Lose! Paper beats Rock");
         }
-        else {
-            console.log("You Win! Rock beats Paper");
-        }
-    }
-    else if (playerSelection == "Paper") {
-        if (computerSelection == "Rock") {
-            console.log("You Win! Paper beats Rock")
-        }
-        else if (computerSelection == "Paper") {
-            console.log("Draw! You are both Paper")
-        }
-        else {
-            console.log("You Lose! Scissors beats Paper")
-        }
-    }
+    else if (playerSelection == computerSelection) {
+        result = ('It\'s a tie. You both chose ' + playerSelection
+            + "<br><br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+    }    
     else {
-        if (computerSelection == "Rock") {
-            console.log("You Lose! Rock beats Scissors");
-        }
-        else if (computerSelection == "Paper") {
-            console.log("You Win! Scissors beats Paper");
-        }
-        else {
-            console.log("Draw! You are both Scissors")
-        }
+        computerScore += 1;
+        result = ('You lose! ' + computerSelection + ' beats ' + playerSelection
+            + "<br><br>Player score: " + playerScore + "<br>Computer score: " + computerScore)
+
+            if (computerScore == 5) {
+                result += '<br><br>I won the game! Reload the page to play again'
+                disableButtons();
+            }
     }
-  }
 
-  function capitalizeFirstLetter (input) {
-      return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
-  }
+    document.getElementById('result').innerHTML = result;
+   
+}
 
-  function game() {
-      for (let i = 0; i < 5; i++) {
-        let x = computerPlay();
-        let input = prompt("Please enter your selection! ");
-        
-        console.log("Computer: " + x);
-        console.log("You: " + capitalizeFirstLetter(input));
-        playRound(capitalizeFirstLetter(input), x);
+buttons.forEach(button => {
+    button.addEventListener('click', function(){
+        playRound(button.value)
+    })
+})
 
-      }
-  }
+
